@@ -7,6 +7,7 @@ class AdUnitsFetchModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     query: Annotated[str, Field(min_length=2)]
+    use_fingerprint_filtering: Annotated[bool, Field(default=False)]
 
 
 class AdUnitsIntegrateModel(BaseModel):

@@ -15,3 +15,9 @@ class AdUnitsIntegrateModel(BaseModel):
 
     ad_unit_ids: list[str]
     base_content: Annotated[str, Field(min_length=10)]
+
+
+class TrackUnitIntegrateModel(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    base_content: Annotated[str, Field(min_length=10)]

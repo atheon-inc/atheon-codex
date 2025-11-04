@@ -5,7 +5,7 @@ import httpx
 from ._internals import _handle_async_response
 from ._utils import Result
 from .exceptions import APIException
-from .models import AdUnitsFetchModel, AdUnitsIntegrateModel
+from .models import AdUnitsFetchModel, AdUnitsIntegrateModel, TrackUnitIntegrateModel
 
 
 class AsyncAtheonCodexClient:
@@ -76,6 +76,19 @@ class AsyncAtheonCodexClient:
                             response = await client.delete(endpoint)
 
                 return await _handle_async_response(response)
+
+    async def integrate_track_unit(self, payload: TrackUnitIntegrateModel):
+        response = await self._make_request(
+            "POST",
+            endpoint="/track-units/integrate",
+            json_payload=payload.model_dump(mode="json"),
+            is_streaming_request=False,
+        )
+
+        if response.error is not None:
+            raise response.error
+
+        return response.value
 
     async def fetch_ad_units(self, payload: AdUnitsFetchModel):
         response = await self._make_request(

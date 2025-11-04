@@ -11,6 +11,26 @@ pip install atheon-codex
 
 ## Usage
 
+1. Analytics Tool:
+
+```python
+import os
+from atheon_codex import AtheonCodexClient, TrackUnitIntegrateModel
+
+client = AtheonCodexClient(
+    api_key=os.environ.get("ATHEON_CODEX_API_KEY"),
+)
+
+integrate_payload = TrackUnitIntegrateModel(
+    base_content="insert the llm response generated from your application as the base content"
+)
+integration_result = client.fetch_track_unit(integrate_payload)
+
+print(integration_result)
+```
+
+2. Monetization via Adverts:
+
 ```python
 import os
 from atheon_codex import AtheonCodexClient, AdUnitsFetchModel, AdUnitsIntegrateModel

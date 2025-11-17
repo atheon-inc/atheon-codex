@@ -5,7 +5,7 @@ import httpx
 from ._internals import _handle_response
 from ._utils import Result
 from .exceptions import APIException
-from .models import AdUnitsFetchModel, AdUnitsIntegrateModel, TrackUnitIntegrateModel
+from .models import AtheonUnitFetchAndIntegrateModel
 
 
 class AtheonCodexClient:
@@ -77,10 +77,12 @@ class AtheonCodexClient:
 
                 return _handle_response(response)
 
-    def integrate_track_unit(self, payload: TrackUnitIntegrateModel):
+    def fetch_and_integrate_atheon_unit(
+        self, payload: AtheonUnitFetchAndIntegrateModel
+    ):
         response = self._make_request(
             "POST",
-            endpoint="/track-units/integrate",
+            endpoint="/track-units/fetch-and-integrate",
             json_payload=payload.model_dump(mode="json"),
             is_streaming_request=False,
         )
@@ -89,47 +91,3 @@ class AtheonCodexClient:
             raise response.error
 
         return response.value
-
-    def fetch_ad_units(self, payload: AdUnitsFetchModel):
-        response = self._make_request(
-            "POST",
-            endpoint="/ad-units/fetch",
-            json_payload=payload.model_dump(mode="json"),
-            is_streaming_request=False,
-        )
-
-        if response.error is not None:
-            raise response.error
-
-        task_id = response.value["message"]["task_id"]
-
-        streaming_response = self._make_request(
-            "GET", f"/ad-units/fetch/response/{task_id}", is_streaming_request=True
-        )
-
-        if streaming_response.error is not None:
-            raise streaming_response.error
-
-        return streaming_response.value
-
-    def integrate_ad_units(self, payload: AdUnitsIntegrateModel):
-        response = self._make_request(
-            "POST",
-            endpoint="/ad-units/integrate",
-            json_payload=payload.model_dump(mode="json"),
-            is_streaming_request=False,
-        )
-
-        if response.error is not None:
-            raise response.error
-
-        task_id = response.value["message"]["task_id"]
-
-        streaming_response = self._make_request(
-            "GET", f"/ad-units/integrate/response/{task_id}", is_streaming_request=True
-        )
-
-        if streaming_response.error is not None:
-            raise streaming_response.error
-
-        return streaming_response.value

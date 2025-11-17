@@ -11,46 +11,25 @@ pip install atheon-codex
 
 ## Usage
 
-1. Analytics Tool:
-
 ```python
 import os
-from atheon_codex import AtheonCodexClient, TrackUnitIntegrateModel
+from atheon_codex import AtheonCodexClient, AtheonUnitFetchAndIntegrateModel
 
 client = AtheonCodexClient(
     api_key=os.environ.get("ATHEON_CODEX_API_KEY"),
 )
 
-integrate_payload = TrackUnitIntegrateModel(
-    base_content="insert the llm response generated from your application as the base content"
+fetch_and_integrate_payload = AtheonUnitFetchAndIntegrateModel(
+    query="How can I write blogs for my website?",
+    base_content="insert the llm response generated from your application as the base content",
+    # use_user_intent_as_filter=True,
 )
-integration_result = client.fetch_track_unit(integrate_payload)
+result = client.fetch_and_integrate_atheon_unit(fetch_and_integrate_payload)
 
-print(integration_result)
+print(result)
 ```
 
-2. Monetization via Adverts:
+>> **Note:** _You can enable monetization through [Atheon Gateway Dashboard](https://gateway.atheon.ad) under project settings._
 
-```python
-import os
-from atheon_codex import AtheonCodexClient, AdUnitsFetchModel, AdUnitsIntegrateModel
-
-client = AtheonCodexClient(
-    api_key=os.environ.get("ATHEON_CODEX_API_KEY"),
-)
-
-fetch_payload = AdUnitsFetchModel(query="How can I write blogs for my website?")
-fetch_result = client.fetch_ad_units(fetch_payload)
-
-ad_unit_ids = [ad_unit["id"] for ad_unit in fetch_result["response_data"]]
-
-
-integrate_payload = AdUnitsIntegrateModel(
-    ad_unit_ids=ad_unit_ids, base_content="insert the llm response generated from your application as the base content"
-)
-integration_result = client.fetch_ad_units(integrate_payload)
-
-print(integration_result)
-```
 
 While you can provide an `api_key` keyword argument, we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/) (or something similar) to add `ATHEON_CODEX_API_KEY="My Eon API Key"` to your `.env` file so that your API Key is not stored in source control.

@@ -37,7 +37,7 @@ class AsyncAtheonCodexClient:
         async with httpx.AsyncClient(
             base_url=self.base_url,
             headers=self.headers,
-            timeout=httpx.Timeout(timeout=15),
+            timeout=httpx.Timeout(timeout=45),
             **self.kwargs,
         ) as client:
             if is_streaming_request:

@@ -134,6 +134,7 @@ class AtheonCodexClient:
         tokens_input: int | None = None,
         tokens_output: int | None = None,
         finish_reason: str | None = None,
+        status_code: int | None = None,
         latency_ms: float | None = None,
         tools_used: list[dict[str, Any]] | None = None,
         conversation_id: uuid.UUID | None = None,
@@ -149,6 +150,7 @@ class AtheonCodexClient:
             tokens_input=tokens_input,
             tokens_output=tokens_output,
             finish_reason=finish_reason,
+            status_code=status_code,
             latency_ms=Decimal(f"{latency_ms:.2f}")
             if latency_ms is not None
             else latency_ms,

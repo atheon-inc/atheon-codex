@@ -11,7 +11,7 @@ from .models import AgentRecord, AtheonTrackPayload, ToolRecord
 
 logger = logging.getLogger(__name__)
 
-__version__ = "1.0.6"
+__version__ = "1.0.7"
 __all__ = [
     "__version__",
     # Decorators
@@ -110,6 +110,7 @@ def track(
     tokens_input: int | None = None,
     tokens_output: int | None = None,
     finish_reason: str | None = None,
+    status_code: int | None = None,
     latency_ms: float | None = None,
     tools_used: list[dict[str, Any]] | None = None,
     conversation_id: uuid.UUID | None = None,
@@ -129,6 +130,7 @@ def track(
         tokens_input (int | None, optional): Prompt token count.
         tokens_output (int | None, optional): Completion token count.
         finish_reason (str | None, optional): LLM stop reason (e.g., "stop", "length").
+        status_code (int | None, optional): Status code returned by the LLM request.
         latency_ms (float | None, optional): End-to-end latency in milliseconds.
         tools_used (list[dict[str, Any]] | None, optional): Tool records. Usually auto-populated.
         conversation_id (uuid.UUID | None, optional): Conversation ID for multi-turn grouping.
@@ -149,6 +151,7 @@ def track(
         tokens_input=tokens_input,
         tokens_output=tokens_output,
         finish_reason=finish_reason,
+        status_code=status_code,
         latency_ms=latency_ms,
         tools_used=tools_used,
         conversation_id=conversation_id,
@@ -182,7 +185,7 @@ def begin(
         ```python
         interaction = atheon.begin(provider="openai", model_name="gpt-4o", input="Summarize Q3")
         result = search("Q3 revenue") # @atheon.tool hooks silently
-        interaction.finish(output=result, tokens_input=80, tokens_output=220, finish_reason="stop")
+        interaction.finish(output=result, tokens_input=80, tokens_output=220, finish_reason="stop", status_code=200)
         ```
     """
     return _get_client().begin(
@@ -209,6 +212,7 @@ def set_result(
     tokens_input: int | None = None,
     tokens_output: int | None = None,
     finish_reason: str | None = None,
+    status_code: int | None = None,
 ) -> None:
     """Set LLM telemetry on the currently active child-agent.
 
@@ -219,6 +223,7 @@ def set_result(
         tokens_input (int | None, optional): Prompt token count.
         tokens_output (int | None, optional): Completion token count.
         finish_reason (str | None, optional): LLM stop reason (e.g., "stop").
+        status_code (int | None, optional): Status code returned by the LLM request.
     """
     from .interactions import current_interaction_var
 
@@ -238,6 +243,8 @@ def set_result(
         active._tokens_output = tokens_output
     if finish_reason is not None:
         active._finish_reason = finish_reason
+    if status_code is not None:
+        active._status_code = status_code
 
 
 def async_init(
@@ -306,6 +313,7 @@ def async_track(
     tokens_input: int | None = None,
     tokens_output: int | None = None,
     finish_reason: str | None = None,
+    status_code: int | None = None,
     latency_ms: float | None = None,
     tools_used: list[dict[str, Any]] | None = None,
     conversation_id: uuid.UUID | None = None,
@@ -324,6 +332,7 @@ def async_track(
         tokens_input (int | None, optional): Prompt token count.
         tokens_output (int | None, optional): Completion token count.
         finish_reason (str | None, optional): LLM stop reason (e.g., "stop", "length").
+        status_code (int | None, optional): Status code returned by the LLM request.
         latency_ms (float | None, optional): End-to-end latency in milliseconds.
         tools_used (list[dict[str, Any]] | None, optional): Tool records. Usually auto-populated.
         conversation_id (uuid.UUID | None, optional): Conversation ID for multi-turn grouping.
@@ -342,6 +351,7 @@ def async_track(
         tokens_input=tokens_input,
         tokens_output=tokens_output,
         finish_reason=finish_reason,
+        status_code=status_code,
         latency_ms=latency_ms,
         tools_used=tools_used,
         conversation_id=conversation_id,

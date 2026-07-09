@@ -26,6 +26,7 @@ interaction_id = atheon.track(
     tokens_input=18,
     tokens_output=120,
     finish_reason="stop",
+    status_code=200,
 )
  
 # Pass interaction_id to your frontend: <atheon-container interaction-id="...">
@@ -75,6 +76,7 @@ interaction_id = interaction.finish(
     tokens_input=80,
     tokens_output=220,
     finish_reason="stop",
+    status_code=200,
 )
 ```
  
@@ -111,6 +113,7 @@ def rag_agent(query: str) -> str:
         tokens_input=response.usage.input_tokens,
         tokens_output=response.usage.output_tokens,
         finish_reason=response.stop_reason,
+        status_code=response.status_code,
     )
     return response.content[0].text
 ```
@@ -141,6 +144,7 @@ async def chat(req: ChatRequest):
         input=req.message,
         output=final_text,
         finish_reason="stop",
+        status_code=200,
     )
     return {"reply": final_text, "interaction_id": str(interaction_id)}
 ```

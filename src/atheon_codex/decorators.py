@@ -122,7 +122,7 @@ def agent(
         @atheon.agent("rag-pipeline", provider="anthropic", model_name="claude-haiku-4-5")
         def rag_agent(query: str) -> str:
             response = llm.messages.create(...)
-            atheon.set_result(tokens_input=10, tokens_output=20, finish_reason="stop")
+            atheon.set_result(tokens_input=10, tokens_output=20, finish_reason="stop", status_code=200)
             return response.content[0].text
         ```
     """

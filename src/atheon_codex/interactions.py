@@ -93,6 +93,7 @@ class Interaction(_BaseInteraction):
         tokens_input: int | None = None,
         tokens_output: int | None = None,
         finish_reason: str | None = None,
+        status_code: int | None = None,
     ) -> tuple[uuid.UUID, str, str | None]:
         """Complete the root interaction and enqueue the full payload.
 
@@ -104,6 +105,7 @@ class Interaction(_BaseInteraction):
             tokens_input (int | None, optional): Prompt token count.
             tokens_output (int | None, optional): Completion token count.
             finish_reason (str | None, optional): LLM stop reason.
+            status_code (int | None, optional): Status code returned by the LLM request.
 
         Returns:
             uuid.UUID: The interaction ID assigned to this event.
@@ -132,6 +134,7 @@ class Interaction(_BaseInteraction):
             tokens_input=tokens_input,
             tokens_output=tokens_output,
             finish_reason=finish_reason,
+            status_code=status_code,
             latency_ms=Decimal(f"{latency_ms:.2f}"),
             tools_used=self.tools_used,
             conversation_id=self.conversation_id,
@@ -170,6 +173,7 @@ class ChildInteraction(_BaseInteraction):
         self._tokens_input: int | None = None
         self._tokens_output: int | None = None
         self._finish_reason: str | None = None
+        self._status_code: int | None = None
 
         self._context_token = current_interaction_var.set(self)
 
@@ -193,6 +197,7 @@ class ChildInteraction(_BaseInteraction):
             tokens_input=self._tokens_input,
             tokens_output=self._tokens_output,
             finish_reason=self._finish_reason,
+            status_code=self._status_code,
             latency_ms=Decimal(f"{latency_ms:.2f}"),
             tools_used=self.tools_used,
             error=error,
